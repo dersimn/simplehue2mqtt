@@ -1,0 +1,27 @@
+{
+  "name": "simplehue2mqtt",
+  "version": "0.0.1",
+  "description": "Simple Hue bridge for mqtt-smarthome",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dersimn/simplehue2mqtt.git"
+  },
+  "author": "Simon Christmann <simon@christmann.email>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dersimn/simplehue2mqtt/issues"
+  },
+  "homepage": "https://github.com/dersimn/simplehue2mqtt#readme",
+  "dependencies": {
+    "mqtt-smarthome-connect": "latest",
+    "request": "^2.85.0",
+    "request-promise": "^4.2.2",
+    "yalm": "^4.1.0",
+    "yargs": "^11.0.0",
+    "yetanothertimerlibrary": "^1.0.2"
+  }
+}
