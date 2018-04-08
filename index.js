@@ -96,11 +96,11 @@ mqtt.subscribe(config.name + "/set/+", (topic, message, wildcard) => {
 	if (typeof message === 'object') {
 		if ('hue' in message) {
 			state.on = true;
-			state.hue = message.hue * 65535;
+			state.hue = Math.trunc(message.hue * 65535);
 		}
 		if ('sat' in message) {
 			state.on = true;
-			state.sat = message.sat * 254;
+			state.sat = Math.trunc(message.sat * 254);
 		}
 		if ('ct' in message) {
 			state.on = true;
@@ -109,7 +109,7 @@ mqtt.subscribe(config.name + "/set/+", (topic, message, wildcard) => {
 		if ('val' in message) {
 			if (typeof message.val === 'number') {
 				state.on = message.val != false;
-				state.bri = message.val * 254;
+				state.bri = Math.trunc(message.val * 254);
 			} else {
 				if (message.val == true) state.on = true;
 				if (message.val == false) state.on = false;
@@ -118,7 +118,7 @@ mqtt.subscribe(config.name + "/set/+", (topic, message, wildcard) => {
 	} else {
 		if (typeof message === 'number') {
 			state.on = message != false;
-			state.bri = message * 254;
+			state.bri = Math.trunc(message * 254);
 		} else {
 			if (message == true) state.on = true;
 			if (message == false) state.on = false;
