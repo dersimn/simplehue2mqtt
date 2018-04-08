@@ -58,14 +58,14 @@ var polling = new Timer(() => {
 						switch (light.colormode) {
 							case 'hs':
 								mqtt.publish(config.name + "/status/" + id, {
-									'val':light.on && light.bri/254,
+									'val':light.on ? light.bri/254 : 0,
 									'hue':light.hue / 65535,
 									'sat':light.sat / 254
 								});
 								break;
 							case 'ct':
 								mqtt.publish(config.name + "/status/" + id, {
-									'val':light.on && light.bri/254,
+									'val':light.on ? light.bri/254 : 0,
 									'ct':light.ct
 								});
 								break;
