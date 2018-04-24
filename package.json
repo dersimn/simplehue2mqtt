@@ -22,6 +22,6 @@
     "request-promise": "^4.2.2",
     "yalm": "^4.1.0",
     "yargs": "^11.0.0",
-    "yetanothertimerlibrary": "latest"
+    "yetanothertimerlibrary": "^2.0.0"
   }
 }

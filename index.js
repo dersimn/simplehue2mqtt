@@ -84,7 +84,7 @@ var polling = new Timer(() => {
 	}).catch(error => {
 		log.error( error );
 	});
-}, config.pollingInterval);
+}).start(config.pollingInterval);
 
 mqtt.subscribe(config.name + "/set/+", (topic, message, wildcard) => {
 	let id = wildcard[0];
@@ -127,7 +127,7 @@ mqtt.subscribe(config.name + "/set/+", (topic, message, wildcard) => {
 
 	log.debug(state);
 	setLights(id,state).then().catch();
-	polling.reset();
+	polling.exec();
 });
 
 function getLights() {
