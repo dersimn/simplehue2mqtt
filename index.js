@@ -78,7 +78,7 @@ var polling = new Timer(() => {
 					mqtt.publish(config.name + "/status/" + id, {'val': light.on});
 				}
 			} else {
-				mqtt.publish(config.name + "/maintenance/" + id, false);
+				mqtt.publish(config.name + "/maintenance/" + id + "/online", false);
 			}
 		});
 	}).catch(error => {
