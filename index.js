@@ -90,10 +90,16 @@ mqtt.subscribe(config.name + "/set/+", (topic, message, wildcard) => {
 	let id = wildcard[0];
 
 	// State 
-	let state = {};
+	let state = {
+		'effect': 'none',
+		'alert': 'none'
+	};
 
 	// Extract value
 	if (typeof message === 'object') {
+		if ('transitiontime' in message) {
+			state.transitiontime = Math.trunc(message.transitiontime / 100);
+		}
 		if ('hue' in message) {
 			state.on = true;
 			state.hue = Math.trunc(message.hue * 65535);
