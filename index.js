@@ -43,7 +43,7 @@ mqtt.connect();
 
 mqtt.on('connect', () => {
     log.info('mqtt connected', config.mqttUrl);
-    mqtt.publish(config.name + '/maintenance/_bridge/online', 'true', {retain: true});
+    mqtt.publish(config.name + '/maintenance/_bridge/online', true, {retain: true});
 });
 
 var polling = new Timer(() => {
