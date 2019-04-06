@@ -168,7 +168,7 @@ function setLights(id, state) {
 		}).then(response => {
 			var allSuccess = true;
 			response.forEach( (dataset) => {
-				if ( typeof dataset["success"] !== "undefined" ) {
+				if ('success' in dataset) {
 					allSuccess &= true;
 				} else {
 					allSuccess = false;
@@ -176,7 +176,7 @@ function setLights(id, state) {
 			});
 
 			if (allSuccess) {
-				resolve("success");
+				resolve(true);
 			} else {
 				reject(response);
 			}
