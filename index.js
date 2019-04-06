@@ -36,7 +36,7 @@ const rp = require('request-promise');
 
 log.setLevel(config.verbosity);
 log.info(pkg.name + ' ' + pkg.version + ' starting');
-log.debug("loaded config: ", config);
+log.debug('loaded config: ', config);
 
 log.info('mqtt trying to connect', config.mqttUrl);
 const mqtt = new MqttSmarthome(config.mqttUrl, {
@@ -56,19 +56,19 @@ var polling = new Timer(() => {
 			let light = lights[id].state;
 
 			if ( light.reachable ) {
-				mqtt.publish(config.name + "/maintenance/" + id + "/online", true);
+				mqtt.publish(config.name + '/maintenance/' + id + '/online', true);
 				if ( 'bri' in light ) {
 					if ( 'colormode' in light ) {
 						switch (light.colormode) {
 							case 'hs':
-								mqtt.publish(config.name + "/status/" + id, {
+								mqtt.publish(config.name + '/status/' + id, {
 									'val':light.on ? light.bri/254 : 0,
 									'hue':light.hue / 65535,
 									'sat':light.sat / 254
 								});
 								break;
 							case 'ct':
-								mqtt.publish(config.name + "/status/" + id, {
+								mqtt.publish(config.name + '/status/' + id, {
 									'val':light.on ? light.bri/254 : 0,
 									'ct':light.ct
 								});
@@ -79,10 +79,10 @@ var polling = new Timer(() => {
 						}
 					}
 				} else {
-					mqtt.publish(config.name + "/status/" + id, {'val': light.on});
+					mqtt.publish(config.name + '/status/' + id, {'val': light.on});
 				}
 			} else {
-				mqtt.publish(config.name + "/maintenance/" + id + "/online", false);
+				mqtt.publish(config.name + '/maintenance/' + id + '/online', false);
 			}
 		});
 	}).catch(error => {
@@ -90,7 +90,7 @@ var polling = new Timer(() => {
 	});
 }).start(config.pollingInterval);
 
-mqtt.subscribe(config.name + "/set/+", (topic, message, wildcard) => {
+mqtt.subscribe(config.name + '/set/+', (topic, message, wildcard) => {
 	let id = wildcard[0];
 
 	// State 
@@ -136,7 +136,7 @@ mqtt.subscribe(config.name + "/set/+", (topic, message, wildcard) => {
 	}
 
 	setLights(id,state).then(() => {
-        log.debug('>', state);
+        log.debug(id, '>', state);
     }).catch(err => {
         log.error(err);
     });
@@ -146,12 +146,12 @@ mqtt.subscribe(config.name + "/set/+", (topic, message, wildcard) => {
 function getLights() {
 	return new Promise(function(resolve, reject) {
 		rp({
-			uri: "http://" + config.bridgeAddress + "/api/" + config.bridgeUsername + "/lights",
+			uri: 'http://' + config.bridgeAddress + '/api/' + config.bridgeUsername + '/lights',
 			json: true
 		}).then(response => {
-			if ( typeof response === "object" ) {
+			if ( typeof response === 'object' ) {
 				resolve(response);
-			} else if ( typeof response === "array" ) {
+			} else if ( typeof response === 'array' ) {
 				reject(response[0].error);
 			} else {
 				reject();
@@ -164,8 +164,8 @@ function getLights() {
 function setLights(id, state) {
 	return new Promise(function(resolve, reject) {
 		rp({
-			method: "PUT",
-			uri: "http://" + config.bridgeAddress + "/api/" + config.bridgeUsername + "/lights/" + id + "/state",
+			method: 'PUT',
+			uri: 'http://' + config.bridgeAddress + '/api/' + config.bridgeUsername + '/lights/' + id + '/state',
 			body: state,
 			json: true
 		}).then(response => {
