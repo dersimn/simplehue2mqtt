@@ -145,7 +145,7 @@ function getLights() {
 		rp({
 			uri: "http://" + config.bridgeAddress + "/api/" + config.bridgeUsername + "/lights",
 			json: true
-		}).then(function (response) {
+		}).then(response => {
 			if ( typeof response === "object" ) {
 				resolve(response);
 			} else if ( typeof response === "array" ) {
@@ -153,7 +153,7 @@ function getLights() {
 			} else {
 				reject();
 			}
-		}).catch(function (err) {
+		}).catch(err => {
 			reject(err);
 		});
 	});
@@ -165,7 +165,7 @@ function setLights(id, state) {
 			uri: "http://" + config.bridgeAddress + "/api/" + config.bridgeUsername + "/lights/" + id + "/state",
 			body: state,
 			json: true
-		}).then(function (response) {
+		}).then(response => {
 			var allSuccess = true;
 			response.forEach( (dataset) => {
 				if ( typeof dataset["success"] !== "undefined" ) {
@@ -180,7 +180,7 @@ function setLights(id, state) {
 			} else {
 				reject(response);
 			}
-		}).catch(function (err) {
+		}).catch(err => {
 			reject(err);
 		});
 	});
