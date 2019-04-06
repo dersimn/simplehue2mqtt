@@ -18,10 +18,10 @@
   "homepage": "https://github.com/dersimn/simplehue2mqtt#readme",
   "dependencies": {
     "mqtt-smarthome-connect": "latest",
-    "request": "^2.85.0",
-    "request-promise": "^4.2.2",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
     "yalm": "^4.1.0",
-    "yargs": "^11.0.0",
-    "yetanothertimerlibrary": "^2.1.0"
+    "yargs": "^13.2.2",
+    "yetanothertimerlibrary": "^3.1.1"
   }
 }

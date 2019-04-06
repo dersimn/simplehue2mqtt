@@ -31,7 +31,7 @@ const config = require('yargs')
     .help('help')
     .argv;
 const MqttSmarthome = require('mqtt-smarthome-connect');
-const Timer = require('yetanothertimerlibrary');
+const Yatl = require('yetanothertimerlibrary');
 const rp = require('request-promise');
 
 log.setLevel(config.verbosity);
@@ -50,7 +50,7 @@ mqtt.on('connect', () => {
     mqtt.publish(config.name + '/maintenance/_bridge/online', true, {retain: true});
 });
 
-var polling = new Timer(() => {
+var polling = new Yatl.Timer(() => {
 	getLights().then(lights => {
 		Object.keys(lights).forEach(id => {
 			let light = lights[id].state;
