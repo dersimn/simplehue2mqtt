@@ -135,8 +135,11 @@ mqtt.subscribe(config.name + "/set/+", (topic, message, wildcard) => {
 		}
 	}
 
-	log.debug(state);
-	setLights(id,state).then().catch();
+	setLights(id,state).then(() => {
+        log.debug('>', state);
+    }).catch(err => {
+        log.error(err);
+    });
 	polling.exec();
 });
 
