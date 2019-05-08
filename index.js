@@ -94,10 +94,7 @@ mqtt.subscribe(config.name + '/set/+', (topic, message, wildcard) => {
 	let id = wildcard[0];
 
 	// State 
-	let state = {
-		'effect': 'none',
-		'alert': 'none'
-	};
+	let state = {};
 
 	// Extract value
 	if (typeof message === 'object') {
