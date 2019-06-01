@@ -33,6 +33,8 @@ const config = require('yargs')
 const MqttSmarthome = require('mqtt-smarthome-connect');
 const Yatl = require('yetanothertimerlibrary');
 const rp = require('request-promise');
+const PQueue = require('p-queue');
+const queue = new PQueue({concurrency: 5}); // Hue Bridge 1: everything >5 results in Error: read ECONNRESET
 
 log.setLevel(config.verbosity);
 log.info(pkg.name + ' ' + pkg.version + ' starting');
@@ -116,7 +118,9 @@ mqtt.subscribe(config.name + '/set/+', (topic, message, wildcard) => {
 		if ('val' in message) {
 			if (typeof message.val === 'number') {
 				state.on = message.val != false;
-				state.bri = Math.trunc(message.val * 254);
+                if (message.val != false) {
+                    state.bri = Math.trunc(message.val * 254);
+                }
 			} else {
 				if (message.val == true) state.on = true;
 				if (message.val == false) state.on = false;
@@ -125,19 +129,21 @@ mqtt.subscribe(config.name + '/set/+', (topic, message, wildcard) => {
 	} else {
 		if (typeof message === 'number') {
 			state.on = message != false;
-			state.bri = Math.trunc(message * 254);
+			if (message.val != false) {
+                state.bri = Math.trunc(message.val * 254);
+            }
 		} else {
 			if (message == true) state.on = true;
 			if (message == false) state.on = false;
 		}
 	}
 
-	setLights(id,state).then(() => {
+	queue.add(() => setLights(id,state).then(() => {
         log.debug(id, '>', state);
     }).catch(err => {
         log.error(err);
-    });
-	polling.exec();
+    }));
+	//polling.exec();
 });
 
 function getLights() {
