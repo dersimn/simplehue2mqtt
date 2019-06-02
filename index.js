@@ -53,141 +53,141 @@ mqtt.on('connect', () => {
 });
 
 var polling = new Yatl.Timer(() => {
-	getLights().then(lights => {
-		Object.keys(lights).forEach(id => {
-			let light = lights[id].state;
+    getLights().then(lights => {
+        Object.keys(lights).forEach(id => {
+            let light = lights[id].state;
 
-			if ( light.reachable ) {
-				mqtt.publish(config.name + '/maintenance/' + id + '/online', true);
-				if ( 'bri' in light ) {
-					if ( 'colormode' in light ) {
-						switch (light.colormode) {
-							case 'hs':
-								mqtt.publish(config.name + '/status/' + id, {
-									'val':light.on ? light.bri/254 : 0,
-									'hue':light.hue / 65535,
-									'sat':light.sat / 254
-								});
-								break;
-							case 'ct':
-								mqtt.publish(config.name + '/status/' + id, {
-									'val':light.on ? light.bri/254 : 0,
-									'ct':light.ct
-								});
-								break;
-							case 'xy':
-								//
-								break;
-						}
-					}
-				} else {
-					mqtt.publish(config.name + '/status/' + id, {'val': light.on});
-				}
-			} else {
-				mqtt.publish(config.name + '/maintenance/' + id + '/online', false);
-			}
-		});
-	}).catch(error => {
-		log.error( error );
-	});
+            if ( light.reachable ) {
+                mqtt.publish(config.name + '/maintenance/' + id + '/online', true);
+                if ( 'bri' in light ) {
+                    if ( 'colormode' in light ) {
+                        switch (light.colormode) {
+                            case 'hs':
+                                mqtt.publish(config.name + '/status/' + id, {
+                                    'val':light.on ? light.bri/254 : 0,
+                                    'hue':light.hue / 65535,
+                                    'sat':light.sat / 254
+                                });
+                                break;
+                            case 'ct':
+                                mqtt.publish(config.name + '/status/' + id, {
+                                    'val':light.on ? light.bri/254 : 0,
+                                    'ct':light.ct
+                                });
+                                break;
+                            case 'xy':
+                                //
+                                break;
+                        }
+                    }
+                } else {
+                    mqtt.publish(config.name + '/status/' + id, {'val': light.on});
+                }
+            } else {
+                mqtt.publish(config.name + '/maintenance/' + id + '/online', false);
+            }
+        });
+    }).catch(error => {
+        log.error( error );
+    });
 }).start(config.pollingInterval);
 
 mqtt.subscribe(config.name + '/set/+', (topic, message, wildcard) => {
-	let id = wildcard[0];
+    let id = wildcard[0];
 
-	// State 
-	let state = {};
+    // State 
+    let state = {};
 
-	// Extract value
-	if (typeof message === 'object') {
-		if ('transitiontime' in message) {
-			state.transitiontime = Math.trunc(message.transitiontime / 100);
-		}
-		if ('hue' in message) {
-			state.on = true;
-			state.hue = Math.trunc(message.hue * 65535);
-		}
-		if ('sat' in message) {
-			state.on = true;
-			state.sat = Math.trunc(message.sat * 254);
-		}
-		if ('ct' in message) {
-			state.on = true;
-			state.ct = message.ct;
-		}
-		if ('val' in message) {
-			if (typeof message.val === 'number') {
-				state.on = message.val != false;
+    // Extract value
+    if (typeof message === 'object') {
+        if ('transitiontime' in message) {
+            state.transitiontime = Math.trunc(message.transitiontime / 100);
+        }
+        if ('hue' in message) {
+            state.on = true;
+            state.hue = Math.trunc(message.hue * 65535);
+        }
+        if ('sat' in message) {
+            state.on = true;
+            state.sat = Math.trunc(message.sat * 254);
+        }
+        if ('ct' in message) {
+            state.on = true;
+            state.ct = message.ct;
+        }
+        if ('val' in message) {
+            if (typeof message.val === 'number') {
+                state.on = message.val != false;
                 if (message.val != false) {
                     state.bri = Math.trunc(message.val * 254);
                 }
-			} else {
-				if (message.val == true) state.on = true;
-				if (message.val == false) state.on = false;
-			}
-		}
-	} else {
-		if (typeof message === 'number') {
-			state.on = message != false;
-			if (message.val != false) {
+            } else {
+                if (message.val == true) state.on = true;
+                if (message.val == false) state.on = false;
+            }
+        }
+    } else {
+        if (typeof message === 'number') {
+            state.on = message != false;
+            if (message.val != false) {
                 state.bri = Math.trunc(message.val * 254);
             }
-		} else {
-			if (message == true) state.on = true;
-			if (message == false) state.on = false;
-		}
-	}
+        } else {
+            if (message == true) state.on = true;
+            if (message == false) state.on = false;
+        }
+    }
 
-	queue.add(() => setLights(id,state).then(() => {
+    queue.add(() => setLights(id,state).then(() => {
         log.debug(id, '>', state);
     }).catch(err => {
         log.error(err);
     }));
-	//polling.exec();
+    //polling.exec();
 });
 
 function getLights() {
-	return new Promise(function(resolve, reject) {
-		rp({
-			uri: 'http://' + config.bridgeAddress + '/api/' + config.bridgeUsername + '/lights',
-			json: true
-		}).then(response => {
-			if ( typeof response === 'object' ) {
-				resolve(response);
-			} else if ( typeof response === 'array' ) {
-				reject(response[0].error);
-			} else {
-				reject();
-			}
-		}).catch(err => {
-			reject(err);
-		});
-	});
+    return new Promise(function(resolve, reject) {
+        rp({
+            uri: 'http://' + config.bridgeAddress + '/api/' + config.bridgeUsername + '/lights',
+            json: true
+        }).then(response => {
+            if ( typeof response === 'object' ) {
+                resolve(response);
+            } else if ( typeof response === 'array' ) {
+                reject(response[0].error);
+            } else {
+                reject();
+            }
+        }).catch(err => {
+            reject(err);
+        });
+    });
 }
 function setLights(id, state) {
-	return new Promise(function(resolve, reject) {
-		rp({
-			method: 'PUT',
-			uri: 'http://' + config.bridgeAddress + '/api/' + config.bridgeUsername + '/lights/' + id + '/state',
-			body: state,
-			json: true
-		}).then(response => {
-			var allSuccess = true;
-			response.forEach( (dataset) => {
-				if ('success' in dataset) {
-					allSuccess &= true;
-				} else {
-					allSuccess = false;
-				}
-			});
+    return new Promise(function(resolve, reject) {
+        rp({
+            method: 'PUT',
+            uri: 'http://' + config.bridgeAddress + '/api/' + config.bridgeUsername + '/lights/' + id + '/state',
+            body: state,
+            json: true
+        }).then(response => {
+            var allSuccess = true;
+            response.forEach( (dataset) => {
+                if ('success' in dataset) {
+                    allSuccess &= true;
+                } else {
+                    allSuccess = false;
+                }
+            });
 
-			if (allSuccess) {
-				resolve(true);
-			} else {
-				reject(response);
-			}
-		}).catch(err => {
-			reject(err);
-		});
-	});
+            if (allSuccess) {
+                resolve(true);
+            } else {
+                reject(response);
+            }
+        }).catch(err => {
+            reject(err);
+        });
+    });
 }
