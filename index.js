@@ -129,8 +129,8 @@ mqtt.subscribe(config.name + '/set/+', (topic, message, wildcard) => {
     } else {
         if (typeof message === 'number') {
             state.on = message != false;
-            if (message.val != false) {
-                state.bri = Math.trunc(message.val * 254);
+            if (message != false) {
+                state.bri = Math.trunc(message * 254);
             }
         } else {
             if (message == true) state.on = true;
