@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const pkg = require('./package.json');
 const log = require('yalm');
 const config = require('yargs')
     .env('SIMPLEHUE2MQTT')
@@ -33,7 +34,6 @@ const MqttSmarthome = require('mqtt-smarthome-connect');
 const Yatl = require('yetanothertimerlibrary');
 const rp = require('request-promise-native');
 const PQueue = require('p-queue');
-const pkg = require('./package.json');
 const queue = new PQueue({concurrency: 5}); // Hue Bridge 1: everything >5 results in Error: read ECONNRESET
 
 log.setLevel(config.verbosity);
