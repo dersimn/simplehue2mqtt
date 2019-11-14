@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/dersimn/simplehue2mqtt#readme",
   "dependencies": {
+    "delay": "^4.3.0",
     "mqtt-smarthome-connect": "latest",
     "p-queue": "^5.0.0",
     "request": "^2.88.0",
