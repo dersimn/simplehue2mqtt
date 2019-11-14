@@ -78,6 +78,8 @@ const polling = new Yatl.Timer(() => {
                             case 'xy':
                                 //
                                 break;
+                            default:
+                                break;
                         }
                     }
                 } else {
@@ -121,31 +123,31 @@ mqtt.subscribe(config.name + '/set/+', (topic, message, wildcard) => {
 
         if ('val' in message) {
             if (typeof message.val === 'number') {
-                state.on = message.val != false;
-                if (message.val != false) {
+                state.on = message.val !== false;
+                if (message.val !== false) {
                     state.bri = Math.trunc(message.val * 254);
                 }
             } else {
-                if (message.val == true) {
+                if (message.val === true) {
                     state.on = true;
                 }
 
-                if (message.val == false) {
+                if (message.val === false) {
                     state.on = false;
                 }
             }
         }
     } else if (typeof message === 'number') {
-        state.on = message != false;
-        if (message != false) {
+        state.on = message !== false;
+        if (message !== false) {
             state.bri = Math.trunc(message * 254);
         }
     } else {
-        if (message == true) {
+        if (message === true) {
             state.on = true;
         }
 
-        if (message == false) {
+        if (message === false) {
             state.on = false;
         }
     }
@@ -166,7 +168,7 @@ function getLights() {
         }).then(response => {
             if (typeof response === 'object') {
                 resolve(response);
-            } else if (typeof response === 'array') {
+            } else if (Array.isArray(response)) {
                 reject(response[0].error);
             } else {
                 reject();
