@@ -31,7 +31,7 @@ const config = require('yargs')
     .argv;
 const MqttSmarthome = require('mqtt-smarthome-connect');
 const Yatl = require('yetanothertimerlibrary');
-const rp = require('request-promise');
+const rp = require('request-promise-native');
 const PQueue = require('p-queue');
 const pkg = require('./package.json');
 const queue = new PQueue({concurrency: 5}); // Hue Bridge 1: everything >5 results in Error: read ECONNRESET

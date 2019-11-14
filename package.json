@@ -20,7 +20,7 @@
     "mqtt-smarthome-connect": "latest",
     "p-queue": "^5.0.0",
     "request": "^2.88.0",
-    "request-promise": "^4.2.4",
+    "request-promise-native": "^1.0.8",
     "yalm": "^4.1.0",
     "yargs": "^13.2.2",
     "yetanothertimerlibrary": "^3.1.1"
